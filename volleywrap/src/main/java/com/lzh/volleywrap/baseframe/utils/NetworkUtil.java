@@ -5,6 +5,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import org.apache.http.conn.util.InetAddressUtils;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +14,8 @@ import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
 public class NetworkUtil {
+    private static final String TAG = NetworkUtil.class.getSimpleName();
+
     public static final int NETYPE_NOCON = -1; //无连接，用于区分断网和未知类型，方便统计
     public static final int NETYPE_UNKNOWN = 0; //未知网络类型
     public static final int NETYPE_WIFI = 1; //WiFi连接
@@ -247,7 +251,9 @@ public class NetworkUtil {
                 for (Enumeration<InetAddress> enumIpAddr = intf
                         .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
+                    MLog.d(TAG, " getIpAddress :" + inetAddress.getHostAddress());
+                    if (!inetAddress.isLoopbackAddress()&& InetAddressUtils.isIPv4Address(inetAddress.getHostAddress())) {
+                        MLog.d(TAG, " get Ip = "+inetAddress.getHostAddress());
                         return inetAddress.getHostAddress().toString();
                     }
                 }

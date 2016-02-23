@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import com.android.volley.Request;
 import com.lzh.volleywrap.baseframe.utils.HttpUtils;
+import com.lzh.volleywrap.baseframe.utils.MLog;
 import com.lzh.volleywrap.baseframe.utils.MToast;
 import com.lzh.volleywrap.baseframe.utils.NetworkUtil;
 import com.lzh.volleywrap.baseframe.utils.SysOSAPI;
@@ -45,15 +46,16 @@ public class HttpClientWrapper {
         return temp;
     }
 
-    public void getWeather(String apiKey, String cityCode, HttpResponseListener listener) {
+    public void getWeather(String apiKey, HttpResponseListener listener) {
         if (!checkNetworkAvailable()) {
             return;
         }
         Map<String, String> tempParams = new HashMap<>();
-        tempParams.put("city", cityCode);
+        tempParams.put("cityip", NetworkUtil.getIpAddress());
         String param = HttpUtils.Map2Query(tempParams, false);
 
         String url = ServerAddressManager.getInstance().getWeatherUrl() + param;
+        MLog.d(TAG, " getWeather url = " + url);
         RequestInterface requestInterface = mVolley.getRequestBuilder().createJsonObjectRequest(url, listener);
 
         Map<String, String> header = new HashMap<>();

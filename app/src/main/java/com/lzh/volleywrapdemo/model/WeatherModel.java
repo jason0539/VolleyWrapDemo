@@ -12,7 +12,7 @@ import com.lzh.volleywrapdemo.utils.DemoConstant;
 public class WeatherModel {
     private static final String TAG = WeatherModel.class.getSimpleName();
 
-    public void getWeather(String city,final WeatherCallback callback) {
+    public void getWeather(final WeatherCallback callback) {
         HttpResponseListener<JSONObject> listener = new HttpResponseListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -24,7 +24,7 @@ public class WeatherModel {
                 callback.fail(msg);
             }
         };
-        HttpClientWrapper.getInstance().getWeather(DemoConstant.API_KEY, city, listener);
+        HttpClientWrapper.getInstance().getWeather(DemoConstant.API_KEY, listener);
     }
 
     public interface WeatherCallback {
