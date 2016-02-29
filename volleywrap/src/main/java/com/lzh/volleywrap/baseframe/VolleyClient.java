@@ -1,21 +1,37 @@
-package com.lzh.volleywrap.baseframe.volley;
+package com.lzh.volleywrap.baseframe;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.lzh.volleywrap.baseframe.http.BaseRequestWrapper;
+import com.lzh.volleywrap.baseframe.http.RequestBuilder;
+import com.lzh.volleywrap.baseframe.http.RequestInterface;
 
 import android.content.Context;
 
-public class VolleyHttpClient {
+public class VolleyClient {
     private RequestQueue mRequestQueue;
-    private ImageLoader mImageLoad;
     private RequestBuilder mBuilder;
+    private volatile static VolleyClient instance;
 
-    public VolleyHttpClient(Context context) {
+    public static final VolleyClient getInstance(Context context) {
+        if (instance == null) {
+            synchronized(VolleyClient.class) {
+                if (instance == null) {
+                    instance = new VolleyClient(context);
+                }
+            }
+        }
+        return instance;
+    }
+
+    private VolleyClient(Context context) {
         mRequestQueue = Volley.newRequestQueue(context);
-        mImageLoad = new ImageLoader(mRequestQueue, new VolleyCacheManager(context));
         mBuilder = new RequestBuilder();
+    }
+
+    public RequestQueue getRequestQueue() {
+        return mRequestQueue;
     }
 
     public RequestBuilder getRequestBuilder() {
@@ -37,9 +53,5 @@ public class VolleyHttpClient {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
-    }
-
-    public ImageLoader getImageLoader() {
-        return mImageLoad;
     }
 }

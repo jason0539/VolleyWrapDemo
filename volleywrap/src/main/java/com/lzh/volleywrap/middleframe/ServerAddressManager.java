@@ -10,20 +10,15 @@ public class ServerAddressManager {
     private final String URL_GET_WEATHER_TEST = "http://apis.baidu.com/heweather/weather/free/";
 
     private boolean mDebug = false;
-    private volatile static ServerAddressManager mInstance;
-
     private ServerAddressManager() {
     }
 
+    private static final class LazyHolder {
+        public static final ServerAddressManager INSTANCE = new ServerAddressManager();
+    }
+
     public static final ServerAddressManager getInstance() {
-        if (mInstance == null) {
-            synchronized(ServerAddressManager.class) {
-                if (mInstance == null) {
-                    mInstance = new ServerAddressManager();
-                }
-            }
-        }
-        return mInstance;
+        return LazyHolder.INSTANCE;
     }
 
     public void init(boolean debug) {

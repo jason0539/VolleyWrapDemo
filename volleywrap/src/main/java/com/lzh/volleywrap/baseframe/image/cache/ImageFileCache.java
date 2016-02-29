@@ -1,4 +1,4 @@
-package com.lzh.volleywrap.baseframe.cache;
+package com.lzh.volleywrap.baseframe.image.cache;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

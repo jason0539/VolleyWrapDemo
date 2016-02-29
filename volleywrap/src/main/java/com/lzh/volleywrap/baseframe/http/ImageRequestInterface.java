@@ -1,4 +1,4 @@
-package com.lzh.volleywrap.baseframe.volley;
+package com.lzh.volleywrap.baseframe.http;
 
 import android.graphics.Bitmap;
 import android.widget.ImageView;

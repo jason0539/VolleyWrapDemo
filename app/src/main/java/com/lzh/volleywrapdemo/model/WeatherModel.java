@@ -2,7 +2,7 @@ package com.lzh.volleywrapdemo.model;
 
 import org.json.JSONObject;
 
-import com.lzh.volleywrap.baseframe.volley.HttpResponseListener;
+import com.lzh.volleywrap.baseframe.http.HttpResponseListener;
 import com.lzh.volleywrap.middleframe.HttpClientWrapper;
 import com.lzh.volleywrapdemo.utils.DemoConstant;
 
@@ -29,7 +29,6 @@ public class WeatherModel {
 
     public interface WeatherCallback {
         void fail(String msg);
-
         void success(String msg);
     }
 }

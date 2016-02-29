@@ -1,4 +1,4 @@
-package com.lzh.volleywrap.baseframe.volley;
+package com.lzh.volleywrap.baseframe.http;
 
 import java.io.File;
 import java.util.Map;

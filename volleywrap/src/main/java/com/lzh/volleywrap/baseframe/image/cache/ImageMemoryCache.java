@@ -1,16 +1,20 @@
-package com.lzh.volleywrap.baseframe.cache;
+package com.lzh.volleywrap.baseframe.image.cache;
+
+import com.lzh.volleywrap.baseframe.utils.MLog;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;
 
 public class ImageMemoryCache {
+    private static final String TAG = ImageMemoryCache.class.getSimpleName();
 
-    static final int CACHE_SIZE = 10 * 1024 * 1024;//10M
     private LruCache<String, Bitmap> mMemoryCache;
     private static volatile ImageMemoryCache imageMemoryCache;
 
     private ImageMemoryCache() {
-        mMemoryCache = new LruCache<String, Bitmap>(CACHE_SIZE) {
+        int maxMemorySize = (int) (Runtime.getRuntime().maxMemory() / 3);
+        MLog.d(TAG, " ImageMemoryCache maxMemorySize=" + maxMemorySize);
+        mMemoryCache = new LruCache<String, Bitmap>(maxMemorySize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 return bitmap.getRowBytes() * bitmap.getHeight();

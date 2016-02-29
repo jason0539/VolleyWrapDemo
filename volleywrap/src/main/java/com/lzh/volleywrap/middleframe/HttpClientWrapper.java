@@ -11,9 +11,9 @@ import com.lzh.volleywrap.baseframe.utils.MLog;
 import com.lzh.volleywrap.baseframe.utils.MToast;
 import com.lzh.volleywrap.baseframe.utils.NetworkUtil;
 import com.lzh.volleywrap.baseframe.utils.SysOSAPI;
-import com.lzh.volleywrap.baseframe.volley.HttpResponseListener;
-import com.lzh.volleywrap.baseframe.volley.RequestInterface;
-import com.lzh.volleywrap.baseframe.volley.VolleyHttpClient;
+import com.lzh.volleywrap.baseframe.http.HttpResponseListener;
+import com.lzh.volleywrap.baseframe.http.RequestInterface;
+import com.lzh.volleywrap.baseframe.VolleyClient;
 
 import android.content.Context;
 
@@ -24,19 +24,27 @@ public class HttpClientWrapper {
     private static final String TAG = HttpClientWrapper.class.getSimpleName();
 
     private Context mContext;
-    private VolleyHttpClient mVolley;
+    private VolleyClient mVolley;
     private Map<String, String> mBaseParam;
+
+    public static HttpClientWrapper getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
+    private static final class LazyHolder {
+        private static final HttpClientWrapper INSTANCE = new HttpClientWrapper();
+    }
+
+    public void init(Context context) {
+        mContext = context;
+        mVolley = VolleyClient.getInstance(context);
+    }
 
     private HttpClientWrapper() {
         mBaseParam = new HashMap<>();
         mBaseParam.put("ver", SysOSAPI.getAppVersionName());
         mBaseParam.put("os", SysOSAPI.getOSVersion());
         mBaseParam.put("pn", SysOSAPI.getPackageName());
-    }
-
-    public void init(Context context) {
-        mContext = context;
-        mVolley = new VolleyHttpClient(context);
     }
 
     private Map<String, String> getBaseParam() {
@@ -84,6 +92,7 @@ public class HttpClientWrapper {
         mVolley.sendRequest(requestInterface);
     }
 
+
     private boolean checkNetworkAvailable() {
         boolean result = NetworkUtil.isNetworkAvailable(mContext);
         if (!result) {
@@ -92,18 +101,5 @@ public class HttpClientWrapper {
             }
         }
         return result;
-    }
-
-    private static volatile HttpClientWrapper mInstance;
-
-    public static HttpClientWrapper getInstance() {
-        if (mInstance == null) {
-            synchronized(HttpClientWrapper.class) {
-                if (mInstance == null) {
-                    mInstance = new HttpClientWrapper();
-                }
-            }
-        }
-        return mInstance;
     }
 }

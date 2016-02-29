@@ -1,4 +1,4 @@
-package com.lzh.volleywrap.baseframe.cache;
+package com.lzh.volleywrap.baseframe.image.cache;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,12 +12,16 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.lzh.volleywrap.baseframe.utils.MLog;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 public class DiskLruCache {
+    private static final String TAG = DiskLruCache.class.getSimpleName();
+
     private static final String CACHE_FILENAME_PREFIX = "cache_";
     private static final String CACHE_FOLDER = "ImageCache";
 
@@ -73,6 +77,7 @@ public class DiskLruCache {
     }
 
     private boolean writeBitmapToFile(Bitmap bitmap, String file) throws IOException {
+        MLog.d(TAG, " writeBitmapToFile path = " + file);
         OutputStream out = null;
         try {
             out = new BufferedOutputStream(new FileOutputStream(file), IO_BUFFER_SIZE);

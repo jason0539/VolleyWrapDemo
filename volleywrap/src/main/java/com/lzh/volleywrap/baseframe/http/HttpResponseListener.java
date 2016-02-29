@@ -1,4 +1,4 @@
-package com.lzh.volleywrap.baseframe.volley;
+package com.lzh.volleywrap.baseframe.http;
 
 public interface HttpResponseListener<T> {
 

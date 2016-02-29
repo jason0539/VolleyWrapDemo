@@ -1,8 +1,6 @@
-package com.lzh.volleywrap.baseframe.volley;
+package com.lzh.volleywrap.baseframe.image.cache;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.lzh.volleywrap.baseframe.cache.ImageFileCache;
-import com.lzh.volleywrap.baseframe.cache.ImageMemoryCache;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,4 +1,4 @@
-package com.lzh.volleywrap.baseframe.volley;
+package com.lzh.volleywrap.baseframe.http;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 public abstract class BaseRequestWrapper<T> implements RequestInterface {
-    static final String DEFAULT_TAG = "default_tag";
+    public static final String DEFAULT_TAG = "default_tag";
     private final String DEFAULT_CHARSET = "UTF-8";
 
     protected String mURL;
