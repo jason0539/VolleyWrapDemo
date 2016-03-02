@@ -6,6 +6,8 @@ import com.lzh.volleywrap.baseframe.http.HttpResponseListener;
 import com.lzh.volleywrap.middleframe.HttpClientWrapper;
 import com.lzh.volleywrapdemo.utils.DemoConstant;
 
+import android.text.TextUtils;
+
 /**
  * liuzhenhui 16/2/22.下午8:59
  */
@@ -16,12 +18,16 @@ public class WeatherModel {
         HttpResponseListener<JSONObject> listener = new HttpResponseListener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                callback.success(response.toString());
+                if (response != null) {
+                    callback.success(response.toString());
+                }
             }
 
             @Override
             public void onError(String msg) {
-                callback.fail(msg);
+                if (!TextUtils.isEmpty(msg)) {
+                    callback.fail(msg);
+                }
             }
         };
         HttpClientWrapper.getInstance().getWeather(DemoConstant.API_KEY, listener);
