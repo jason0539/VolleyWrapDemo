@@ -1,11 +1,13 @@
 package com.lzh.volleywrap.baseframe.image.cache;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.lzh.volleywrap.baseframe.utils.MLog;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
 public class VolleyCacheManager implements ImageLoader.ImageCache {
+    public static final String TAG = VolleyCacheManager.class.getSimpleName();
 
     private Context mContext;
 
@@ -15,17 +17,16 @@ public class VolleyCacheManager implements ImageLoader.ImageCache {
 
     @Override
     public Bitmap getBitmap(String s) {
-        Bitmap bitmap = ImageMemoryCache.getInstance().get(s);
-        if (bitmap == null) {
-            bitmap = ImageFileCache.getInstance(mContext).getBitmapFromDiskCache(s);
-        }
-        return bitmap;
+        MLog.d(TAG, " getBitmap:url = " + s);
+        return ImageMemoryCache.getInstance().get(s) == null ?
+                ImageFileCache.getInstance(mContext).getBitmapFromDiskCache(s) : ImageMemoryCache.getInstance().get(s);
     }
 
     @Override
     public void putBitmap(String s, Bitmap bitmap) {
-        ImageFileCache.getInstance(mContext).addBitmapToCache(s, bitmap);
+        MLog.d(TAG, " putBitmap:url = " + s);
         ImageMemoryCache.getInstance().put(s, bitmap);
+        ImageFileCache.getInstance(mContext).addBitmapToDiscCache(s, bitmap);
     }
 
 }

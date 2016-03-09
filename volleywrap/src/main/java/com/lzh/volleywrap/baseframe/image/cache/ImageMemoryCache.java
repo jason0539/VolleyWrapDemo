@@ -3,6 +3,7 @@ package com.lzh.volleywrap.baseframe.image.cache;
 import com.lzh.volleywrap.baseframe.utils.MLog;
 
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.LruCache;
 
 public class ImageMemoryCache {
@@ -34,7 +35,7 @@ public class ImageMemoryCache {
     }
 
     public void put(String url, Bitmap bitmap) {
-        if (url != null) {
+        if (!TextUtils.isEmpty(url)) {
             mMemoryCache.put(url, bitmap);
         }
     }

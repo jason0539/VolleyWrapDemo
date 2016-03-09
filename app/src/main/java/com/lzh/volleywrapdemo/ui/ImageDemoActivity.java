@@ -37,7 +37,7 @@ public class ImageDemoActivity extends Activity{
         public GridViewAdpter(Context context, String[] urlArray) {
             mInflater = LayoutInflater.from(context);
             mUrlArray = urlArray;
-            mWidth = ScreenUtils.getScreenWidth(context) / 4;
+            mWidth = ScreenUtils.getScreenWidth(context) / 3;
         }
 
         @Override

@@ -1,5 +1,7 @@
 package com.lzh.volleywrap.middleframe;
 
+import java.util.HashMap;
+
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.lzh.volleywrap.baseframe.VolleyClient;
@@ -19,8 +21,10 @@ public class ImageLoaderWrapper {
 
     private ImageLoader mImageLoader = null;
     private ImageLoaderOption mDefaultLoaderOption = null;
+    private HashMap<Integer, String> imageViewHashMap;
 
     private ImageLoaderWrapper() {
+        imageViewHashMap = new HashMap<>();
     }
 
     public static ImageLoaderWrapper getInstance() {
@@ -34,17 +38,25 @@ public class ImageLoaderWrapper {
     public void init(Context context) {
         mImageLoader =
                 new ImageLoader(VolleyClient.getInstance(context).getRequestQueue(), new VolleyCacheManager(context));
-        mDefaultLoaderOption = new ImageLoaderOption.Builder().setBitmapDisplayer(new SimpleBitmapDisplayer()).build();
+        mDefaultLoaderOption = new ImageLoaderOption.Builder()
+                .setBitmapDisplayer(new SimpleBitmapDisplayer())
+                .resetImageViewBeforLoad()
+                .build();
     }
 
     public void displayImage(String url, final ImageView imageView) {
         MLog.d(TAG, " displayImage:url = " + url + ",imageview.hash = " + imageView.hashCode());
-        imageView.setImageBitmap(null);
+        if (mDefaultLoaderOption.isResetImageViewBeforeLoad()) {
+            imageView.setImageBitmap(null);
+        }
+        imageViewHashMap.put(imageView.hashCode(), url);
         mImageLoader.get(url, new ImageLoader.ImageListener() {
 
             @Override
             public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-                mDefaultLoaderOption.displayer.display(imageContainer.getBitmap(), imageView);
+                if (imageViewHashMap.get(imageView.hashCode()).equals(imageContainer.getRequestUrl())) {
+                    mDefaultLoaderOption.getDisplayer().display(imageContainer.getBitmap(), imageView);
+                }
             }
 
             @Override

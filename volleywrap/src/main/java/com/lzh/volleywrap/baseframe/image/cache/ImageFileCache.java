@@ -3,6 +3,8 @@ package com.lzh.volleywrap.baseframe.image.cache;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.lzh.volleywrap.baseframe.utils.MLog;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -12,8 +14,7 @@ import android.graphics.Bitmap;
 public class ImageFileCache {
     private static final String TAG = ImageFileCache.class.getSimpleName();
 
-    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 50;//50M
-    private final Object mDiskCacheLock = new Object();
+    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 100;//100M
     private DiskLruCache mDiskLruCache = null;
     private static volatile ImageFileCache instance = null;
 
@@ -33,43 +34,25 @@ public class ImageFileCache {
     }
 
     /**
-     * 设置缓存格式
+     * 添加位图到文件缓存，同步方法
      */
-    public void setCompressParams(Bitmap.CompressFormat format) {
-        if (mDiskLruCache != null) {
-            mDiskLruCache.setCompressParams(format, 100);
-        }
+    public void addBitmapToDiscCache(String url, Bitmap bitmap) {
+        MLog.d(TAG, " addBitmapToCache:url = " + url + ",localName = " + generateLocalFileName(url));
+        mDiskLruCache.put(generateLocalFileName(url), bitmap);
     }
 
     /**
-     * 添加位图到文件缓存
+     * 从文件缓存中获得位图实例，同步方法
      */
-    public void addBitmapToCache(String key, Bitmap bitmap) {
-        synchronized(mDiskCacheLock) {
-            String urlAfterDecode = getLocalFileName(key);
-            if (mDiskLruCache != null && mDiskLruCache.get(urlAfterDecode) == null) {
-                mDiskLruCache.put(urlAfterDecode, bitmap);
-            }
-        }
-    }
-
-    /**
-     * 从文件缓存中获得位图实例
-     */
-    public Bitmap getBitmapFromDiskCache(String key) {
-        synchronized(mDiskCacheLock) {
-            if (mDiskLruCache != null) {
-                String urlAfterDecode = getLocalFileName(key);
-                return mDiskLruCache.get(urlAfterDecode);
-            }
-        }
-        return null;
+    public Bitmap getBitmapFromDiskCache(String url) {
+        MLog.d(TAG, " getBitmapFromDiskCache:url = " + url);
+        return mDiskLruCache.get(generateLocalFileName(url));
     }
 
     /**
      * 生成文件名
      */
-    protected String getLocalFileName(String string) {
+    protected String generateLocalFileName(String string) {
         if (string == null) {
             return null;
         }
@@ -88,6 +71,15 @@ public class ImageFileCache {
             }
         }
         return result;
+    }
+
+    /**
+     * 设置缓存格式
+     */
+    public void setCompressParams(Bitmap.CompressFormat format) {
+        if (mDiskLruCache != null) {
+            mDiskLruCache.setCompressParams(format, 100);
+        }
     }
 }
 

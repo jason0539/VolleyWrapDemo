@@ -7,6 +7,6 @@
     <GridView
             android:id="@+id/gv_imagelist"
             android:layout_width="match_parent"
-            android:numColumns="4"
+            android:numColumns="3"
             android:layout_height="match_parent"></GridView>
 </LinearLayout>
