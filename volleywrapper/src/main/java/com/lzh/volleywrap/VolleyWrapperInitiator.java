@@ -9,7 +9,7 @@ import com.lzh.volleywrap.middleframe.ServerAddressManager;
 
 import android.content.Context;
 
-public class VolleyWrapInitiator {
+public class VolleyWrapperInitiator {
 
     public static void init(Context context, boolean debug) {
         MLog.init(debug);

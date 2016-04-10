@@ -1,6 +1,6 @@
 package com.lzh.volleywrapdemo;
 
-import com.lzh.volleywrap.VolleyWrapInitiator;
+import com.lzh.volleywrap.VolleyWrapperInitiator;
 
 import android.app.Application;
 
@@ -13,6 +13,6 @@ public class DemoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        VolleyWrapInitiator.init(this, BuildConfig.DEBUG);
+        VolleyWrapperInitiator.init(this, BuildConfig.DEBUG);
     }
 }

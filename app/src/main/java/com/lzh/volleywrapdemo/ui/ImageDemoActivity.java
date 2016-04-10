@@ -21,12 +21,29 @@ import android.widget.ImageView;
  */
 public class ImageDemoActivity extends Activity{
     private static final String TAG = ImageDemoActivity.class.getSimpleName();
-
+    boolean load = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imagedemo);
-        ((GridView) findViewById(R.id.gv_imagelist)).setAdapter(new GridViewAdpter(this, DemoConstant.PHOTOS));
+        final GridViewAdpter adpter = new GridViewAdpter(this, DemoConstant.PHOTOS);
+        ((GridView) findViewById(R.id.gv_imagelist)).setAdapter(adpter);
+        ((GridView) findViewById(R.id.gv_imagelist)).setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    load = true;
+                    adpter.notifyDataSetChanged();
+                } else {
+                    load = false;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
     }
 
     class GridViewAdpter extends BaseAdapter {
@@ -70,7 +87,11 @@ public class ImageDemoActivity extends Activity{
             } else {
                 viewTag = (ItemViewTag) convertView.getTag();
             }
-            ImageLoaderWrapper.getInstance().displayImage(mUrlArray[position], viewTag.mImageView);
+            if (load) {
+                ImageLoaderWrapper.getInstance().displayImage(mUrlArray[position], viewTag.mImageView);
+            }else {
+                viewTag.mImageView.setImageResource(R.mipmap.ic_launcher);
+            }
             return convertView;
         }
 

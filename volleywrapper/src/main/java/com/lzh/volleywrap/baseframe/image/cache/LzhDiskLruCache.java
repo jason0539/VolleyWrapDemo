@@ -17,8 +17,8 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.text.TextUtils;
 
-public class DiskLruCache {
-    private static final String TAG = DiskLruCache.class.getSimpleName();
+public class LzhDiskLruCache {
+    private static final String TAG = LzhDiskLruCache.class.getSimpleName();
 
     private static final String CACHE_FILENAME_PREFIX = "cache_";
     private static final String CACHE_FOLDER = "ImageCache";
@@ -38,11 +38,11 @@ public class DiskLruCache {
 
     private final Map<String, String> mLinkedHashMap = new LinkedHashMap<>(INITIAL_CAPACITY, LOAD_FACTOR, true);
 
-    public static DiskLruCache openCache(Context context, long maxByteSize) {
-        return new DiskLruCache(getDiskCacheDir(context, CACHE_FOLDER), maxByteSize);
+    public static LzhDiskLruCache openCache(Context context, long maxByteSize) {
+        return new LzhDiskLruCache(getDiskCacheDir(context, CACHE_FOLDER), maxByteSize);
     }
 
-    private DiskLruCache(File cacheDir, long maxByteSize) {
+    private LzhDiskLruCache(File cacheDir, long maxByteSize) {
         mCacheDir = cacheDir;
         maxCacheByteSize = maxByteSize;
     }
