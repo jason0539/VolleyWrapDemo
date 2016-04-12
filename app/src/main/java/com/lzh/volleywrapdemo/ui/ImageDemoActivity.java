@@ -21,27 +21,34 @@ import android.widget.ImageView;
  */
 public class ImageDemoActivity extends Activity{
     private static final String TAG = ImageDemoActivity.class.getSimpleName();
-    boolean load = true;
+
+    private GridView mGridView;
+    private boolean firstLoad = true;
+    private int firstVisibleIndex, lastVisibleIndex;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imagedemo);
-        final GridViewAdpter adpter = new GridViewAdpter(this, DemoConstant.PHOTOS);
-        ((GridView) findViewById(R.id.gv_imagelist)).setAdapter(adpter);
-        ((GridView) findViewById(R.id.gv_imagelist)).setOnScrollListener(new AbsListView.OnScrollListener() {
+        GridViewAdpter adpter = new GridViewAdpter(this, DemoConstant.PHOTOS);
+        mGridView = ((GridView) findViewById(R.id.gv_imagelist));
+        mGridView.setAdapter(adpter);
+        mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                firstLoad = false;
                 if (scrollState == SCROLL_STATE_IDLE) {
-                    load = true;
-                    adpter.notifyDataSetChanged();
-                } else {
-                    load = false;
+                    for (; firstVisibleIndex < lastVisibleIndex; firstVisibleIndex++) {
+                        ImageLoaderWrapper.getInstance().displayImage(DemoConstant.PHOTOS[firstVisibleIndex],
+                                (ImageView) mGridView.findViewWithTag(firstVisibleIndex));
+                    }
                 }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+                firstVisibleIndex = firstVisibleItem;
+                lastVisibleIndex = firstVisibleItem + visibleItemCount;
             }
         });
     }
@@ -86,12 +93,12 @@ public class ImageDemoActivity extends Activity{
                 convertView.setTag(viewTag);
             } else {
                 viewTag = (ItemViewTag) convertView.getTag();
-            }
-            if (load) {
-                ImageLoaderWrapper.getInstance().displayImage(mUrlArray[position], viewTag.mImageView);
-            }else {
                 viewTag.mImageView.setImageResource(R.mipmap.ic_launcher);
             }
+            if (firstLoad) {
+                ImageLoaderWrapper.getInstance().displayImage(mUrlArray[position], viewTag.mImageView);
+            }
+            viewTag.mImageView.setTag(position);
             return convertView;
         }
 

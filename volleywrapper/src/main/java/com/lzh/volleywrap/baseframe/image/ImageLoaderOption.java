@@ -1,5 +1,8 @@
 package com.lzh.volleywrap.baseframe.image;
 
+import com.lzh.volleywrap.baseframe.image.displayer.BitmapDisplayer;
+import com.lzh.volleywrap.baseframe.image.displayer.SimpleBitmapDisplayer;
+
 /**
  * liuzhenhui 16/2/24.下午8:49
  */

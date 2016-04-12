@@ -6,8 +6,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.lzh.volleywrap.baseframe.VolleyClient;
 import com.lzh.volleywrap.baseframe.image.ImageLoaderOption;
-import com.lzh.volleywrap.baseframe.image.SimpleBitmapDisplayer;
 import com.lzh.volleywrap.baseframe.image.cache.VolleyCacheManager;
+import com.lzh.volleywrap.baseframe.image.displayer.SimpleBitmapDisplayer;
 import com.lzh.volleywrap.baseframe.utils.MLog;
 
 import android.content.Context;
@@ -40,7 +40,6 @@ public class ImageLoaderWrapper {
                 new ImageLoader(VolleyClient.getInstance(context).getRequestQueue(), new VolleyCacheManager(context));
         mDefaultLoaderOption = new ImageLoaderOption.Builder()
                 .setBitmapDisplayer(new SimpleBitmapDisplayer())
-                .resetImageViewBeforLoad()
                 .build();
     }
 

@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.lzh.volleywrap.baseframe.utils.MLog;
 import com.lzh.volleywrap.baseframe.utils.SysOSAPI;
 
 import android.content.Context;
@@ -60,15 +59,15 @@ public class ImageFileCache {
     public void addBitmapToDiscCache(String url, Bitmap bitmap) {
         try {
             String key = generateLocalFileName(url);
-            MLog.d(TAG, " addBitmapToCache:url = " + url + ",localName = " + key);
+//            MLog.d(TAG, " addBitmapToCache:url = " + url + ",localName = " + key);
             DiskLruCache.Editor editor = mDiskLruCache.edit(key);
             if (editor != null) {
                 OutputStream outputStream = editor.newOutputStream(0);
                 if (writeBitmapToFile(bitmap, outputStream)) {
-                    MLog.d(TAG, "->addBitmapToDiscCache:success");
+//                    MLog.d(TAG, "->addBitmapToDiscCache:success");
                     editor.commit();
                 } else {
-                    MLog.d(TAG, "->addBitmapToDiscCache:failed");
+//                    MLog.d(TAG, "->addBitmapToDiscCache:failed");
                     editor.abort();
                 }
             }
@@ -102,7 +101,7 @@ public class ImageFileCache {
     public Bitmap getBitmapFromDiskCache(String url) {
         Bitmap bitmap = null;
         try {
-            MLog.d(TAG, " getBitmapFromDiskCache:url = " + url);
+//            MLog.d(TAG, " getBitmapFromDiskCache:url = " + url);
             String key = generateLocalFileName(url);
             DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
             if (snapshot != null) {
