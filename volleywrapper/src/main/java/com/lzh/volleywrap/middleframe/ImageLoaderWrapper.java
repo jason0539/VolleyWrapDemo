@@ -7,7 +7,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.lzh.volleywrap.baseframe.VolleyClient;
 import com.lzh.volleywrap.baseframe.image.ImageLoaderOption;
 import com.lzh.volleywrap.baseframe.image.cache.VolleyCacheManager;
-import com.lzh.volleywrap.baseframe.image.displayer.SimpleBitmapDisplayer;
+import com.lzh.volleywrap.baseframe.image.displayer.AnimBitmapDisplayer;
 import com.lzh.volleywrap.baseframe.utils.MLog;
 
 import android.content.Context;
@@ -39,7 +39,7 @@ public class ImageLoaderWrapper {
         mImageLoader =
                 new ImageLoader(VolleyClient.getInstance(context).getRequestQueue(), new VolleyCacheManager(context));
         mDefaultLoaderOption = new ImageLoaderOption.Builder()
-                .setBitmapDisplayer(new SimpleBitmapDisplayer())
+                .setBitmapDisplayer(new AnimBitmapDisplayer())
                 .build();
     }
 
@@ -67,7 +67,49 @@ public class ImageLoaderWrapper {
     }
 
     public void displayImage(String url, final ImageView imageView, int width, int height) {
+        MLog.d(TAG, " displayImage:url = " + url + ",imageview.hash = " + imageView.hashCode());
+        if (mDefaultLoaderOption.isResetImageViewBeforeLoad()) {
+            imageView.setImageBitmap(null);
+        }
+        imageViewHashMap.put(imageView.hashCode(), url);
+        mImageLoader.get(url, new ImageLoader.ImageListener() {
 
+            @Override
+            public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                if (imageViewHashMap.get(imageView.hashCode()).equals(imageContainer.getRequestUrl())) {
+                    mDefaultLoaderOption.getDisplayer().display(imageContainer.getBitmap(), imageView);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                MLog.d(TAG, " onErrorResponse VolleyError:" + volleyError.toString());
+            }
+
+        }, width, height, ImageView.ScaleType.FIT_CENTER);
     }
 
+    public void displayImage(String url, final ImageView imageView, int width, int height,
+                             ImageView.ScaleType scaleType) {
+        MLog.d(TAG, " displayImage:url = " + url + ",imageview.hash = " + imageView.hashCode());
+        if (mDefaultLoaderOption.isResetImageViewBeforeLoad()) {
+            imageView.setImageBitmap(null);
+        }
+        imageViewHashMap.put(imageView.hashCode(), url);
+        mImageLoader.get(url, new ImageLoader.ImageListener() {
+
+            @Override
+            public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                if (imageViewHashMap.get(imageView.hashCode()).equals(imageContainer.getRequestUrl())) {
+                    mDefaultLoaderOption.getDisplayer().display(imageContainer.getBitmap(), imageView);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                MLog.d(TAG, " onErrorResponse VolleyError:" + volleyError.toString());
+            }
+
+        }, width, height, scaleType);
+    }
 }

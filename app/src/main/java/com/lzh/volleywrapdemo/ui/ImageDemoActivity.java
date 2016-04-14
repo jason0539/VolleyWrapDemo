@@ -1,5 +1,6 @@
 package com.lzh.volleywrapdemo.ui;
 
+import com.lzh.volleywrap.baseframe.utils.MLog;
 import com.lzh.volleywrap.baseframe.utils.ScreenUtils;
 import com.lzh.volleywrap.middleframe.ImageLoaderWrapper;
 import com.lzh.volleywrapdemo.R;
@@ -22,35 +23,17 @@ import android.widget.ImageView;
 public class ImageDemoActivity extends Activity{
     private static final String TAG = ImageDemoActivity.class.getSimpleName();
 
+    private int mCellImageWidth;
     private GridView mGridView;
-    private boolean firstLoad = true;
-    private int firstVisibleIndex, lastVisibleIndex;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imagedemo);
+        mCellImageWidth = ScreenUtils.getScreenWidth(this) / 8;
         GridViewAdpter adpter = new GridViewAdpter(this, DemoConstant.PHOTOS);
         mGridView = ((GridView) findViewById(R.id.gv_imagelist));
         mGridView.setAdapter(adpter);
-        mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                firstLoad = false;
-                if (scrollState == SCROLL_STATE_IDLE) {
-                    for (; firstVisibleIndex < lastVisibleIndex; firstVisibleIndex++) {
-                        ImageLoaderWrapper.getInstance().displayImage(DemoConstant.PHOTOS[firstVisibleIndex],
-                                (ImageView) mGridView.findViewWithTag(firstVisibleIndex));
-                    }
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                firstVisibleIndex = firstVisibleItem;
-                lastVisibleIndex = firstVisibleItem + visibleItemCount;
-            }
-        });
     }
 
     class GridViewAdpter extends BaseAdapter {
@@ -95,10 +78,9 @@ public class ImageDemoActivity extends Activity{
                 viewTag = (ItemViewTag) convertView.getTag();
                 viewTag.mImageView.setImageResource(R.mipmap.ic_launcher);
             }
-            if (firstLoad) {
-                ImageLoaderWrapper.getInstance().displayImage(mUrlArray[position], viewTag.mImageView);
-            }
-            viewTag.mImageView.setTag(position);
+            MLog.d("width = " + mCellImageWidth + ",height = " + mCellImageWidth);
+            ImageLoaderWrapper.getInstance()
+                    .displayImage(mUrlArray[position], viewTag.mImageView, mCellImageWidth, mCellImageWidth);
             return convertView;
         }
 
